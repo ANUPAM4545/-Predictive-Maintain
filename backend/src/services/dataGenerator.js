@@ -34,7 +34,10 @@ const startSimulation = (io) => {
                 });
                 anomalyResult = response.data;
             } catch (err) {
-                console.error("ML Service unavailable. Proceeding with mock data.");
+                console.error(`ML Service Error [${mlUrl}]:`, err.message);
+                if (err.response) {
+                    console.error("Status:", err.response.status, "Data:", err.response.data);
+                }
             }
             
             const sensorData = {
