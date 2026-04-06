@@ -1,0 +1,27 @@
+services:
+  # 1. ML Service (Python/Flask)
+  - type: web
+    name: ml-service-predictive
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+
+  # 2. Backend API (Node.js/Express)
+  - type: web
+    name: backend-predictive
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false # Set this in the Render Dashboard
+      - key: ML_SERVICE_URL
+        fromService:
+          name: ml-service-predictive
+          type: web
+          property: host
