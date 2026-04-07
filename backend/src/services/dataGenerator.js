@@ -44,18 +44,22 @@ const startSimulation = (io) => {
                 }
                 
                 // CRITICAL DIAGNOSTIC: Emit the error straight to the frontend so we can verify the URL and the failure live
+                const isColdStart = err.message.includes('502') || (err.response && err.response.status === 502);
+                
                 const errorAlert = {
                     machineId: "System Diagnostic",
-                    type: "ML Connection Error",
-                    severity: "Critical",
-                    message: `Cannot reach ML at ${mlUrl}. Error: ${err.message}`,
+                    type: isColdStart ? "ML Container Booting" : "ML Connection Error",
+                    severity: isColdStart ? "Warning" : "Critical",
+                    message: isColdStart 
+                        ? `The Python ML microservice is automatically waking up from Free Tier sleep. Please allow 60 seconds...`
+                        : `Cannot reach ML. Status: ${err.message}`,
                     timestamp: new Date(),
                     resolved: false
                 };
                 
                 // Prevent spamming the error every 3 seconds if we already sent one recently
-                const lastError = store.alerts.find(a => a.type === "ML Connection Error");
-                if (!lastError || (new Date() - new Date(lastError.timestamp)) > 15000) {
+                const lastError = store.alerts.find(a => a.machineId === "System Diagnostic");
+                if (!lastError || (new Date() - new Date(lastError.timestamp)) > 20000) {
                     store.addAlert(errorAlert);
                     io.emit('new_alert', store.alerts[store.alerts.length - 1]);
                 }
