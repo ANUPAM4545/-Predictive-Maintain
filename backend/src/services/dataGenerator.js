@@ -24,7 +24,11 @@ const startSimulation = (io) => {
     setInterval(async () => {
         try {
             const rawData = generateRandomData();
-            const mlUrl = process.env.ML_SERVICE_URL || 'http://localhost:8000/predict';
+            let mlBase = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+            if (!mlBase.startsWith('http')) {
+                mlBase = `https://${mlBase}`;
+            }
+            const mlUrl = mlBase.endsWith('/predict') ? mlBase : `${mlBase.replace(/\/$/, '')}/predict`;
             let anomalyResult = { is_anomaly: false, anomaly_score: 0, severity: 'Normal' };
             
             try {
