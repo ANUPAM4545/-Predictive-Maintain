@@ -42,6 +42,23 @@ const startSimulation = (io) => {
                 if (err.response) {
                     console.error("Status:", err.response.status, "Data:", err.response.data);
                 }
+                
+                // CRITICAL DIAGNOSTIC: Emit the error straight to the frontend so we can verify the URL and the failure live
+                const errorAlert = {
+                    machineId: "System Diagnostic",
+                    type: "ML Connection Error",
+                    severity: "Critical",
+                    message: `Cannot reach ML at ${mlUrl}. Error: ${err.message}`,
+                    timestamp: new Date(),
+                    resolved: false
+                };
+                
+                // Prevent spamming the error every 3 seconds if we already sent one recently
+                const lastError = store.alerts.find(a => a.type === "ML Connection Error");
+                if (!lastError || (new Date() - new Date(lastError.timestamp)) > 15000) {
+                    store.addAlert(errorAlert);
+                    io.emit('new_alert', store.alerts[store.alerts.length - 1]);
+                }
             }
             
             const sensorData = {

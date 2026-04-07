@@ -59,15 +59,15 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="p-6 max-w-7xl mx-auto space-y-6">
-            <header className="flex items-center justify-between">
+        <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6">
+            <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-neon">
+                    <h1 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-neon">
                         Predictive Maintenance
                     </h1>
                     <p className="text-gray-400 mt-1">Real-time AI monitoring and anomaly detection</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 self-start md:self-auto">
                     <span className="relative flex h-3 w-3">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
@@ -127,7 +127,7 @@ const Dashboard = () => {
                     <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                         <Activity className="text-primary"/> Live Robot Activity
                     </h2>
-                    <div className="h-[400px]">
+                    <div className="h-[250px] md:h-[400px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={sensors}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
@@ -150,7 +150,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Alerts Panel */}
-                <div className="glass-panel p-6 flex flex-col h-[480px]">
+                <div className="glass-panel p-6 flex flex-col h-[300px] md:h-[480px]">
                     <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                         <AlertTriangle className="text-warning"/> Active Alerts
                     </h2>
